@@ -1,0 +1,82 @@
+name: tests
+on: pull_request
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Go
+      uses: WillAbides/setup-go-faster@v1.12.0
+      with:
+        go-version: '1.21'
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v3
+      with:
+        args: --timeout=5m
+  codeql:
+    name: analyze
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: go
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+  gotest:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Go
+      uses: WillAbides/setup-go-faster@v1.12.0
+      with:
+        go-version: '1.21'
+    - name: Go test
+      run: go test ./...
+  build-containers:
+    name: build container test
+    runs-on: ubuntu-latest
+    needs:
+    - golangci
+    - codeql
+    - gotest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Set up buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build containers
+      uses: docker/build-push-action@v5
+      with:
+        push: false
+        platforms: linux/amd64,linux/arm64
+  build-binaries:
+    name: build test
+    runs-on: ubuntu-latest
+    needs:
+    - golangci
+    - codeql
+    - gotest
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: [amd64, arm64]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup Go
+      uses: WillAbides/setup-go-faster@v1.12.0
+      with:
+        go-version: '1.21'
+    - name: Run go build
+      run: |
+        BINARY_NAME=chargeflux-${{matrix.goos}}-${{matrix.goarch}}
+        GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -o $BINARY_NAME -v

@@ -45,8 +45,8 @@ jobs:
     - name: Save artifact
       uses: actions/upload-artifact@v3
       with:
-        name: gokmp-artifact
-        path: gokmp-*-*
+        name: chargeflux-artifact
+        path: chargeflux-*-*
         retention-days: 1
 
   container:
@@ -89,10 +89,10 @@ jobs:
     - name: Restore artifact
       uses: actions/download-artifact@v3
       with:
-        name: gokmp-artifact
+        name: chargeflux-artifact
     - name: Create checksums
       run: |
-        sha256sum gokmp-*-* | tee gokmp.sha256
+        sha256sum chargeflux-*-* | tee chargeflux.sha256
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
@@ -104,4 +104,4 @@ jobs:
           ${{ needs.tag.outputs.changelog }}
 
           Docker image: `ghcr.io/${{ github.repository }}:${{ needs.tag.outputs.tag }}`
-        files: gokmp-*-*,gokmp.sha256
+        files: chargeflux-*-*,chargeflux.sha256

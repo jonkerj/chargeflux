@@ -13,42 +13,42 @@ type (
 	Wifi struct {
 		Status        string `json:"status"`
 		SSID          string `json:"ssid"`
-		RSSI          int    `json:"rssi" influx:"wifi_rssi"`
+		RSSI          int    `json:"rssi" chargeflux:"wifi_rssi"`
 		BSSID         string `json:"bssid"`
 		AutoConnect   bool   `json:"auto_connect"`
 		AutoReconnect bool   `json:"auto_reconnect"`
 	}
 
 	EVSE struct {
-		Temp      int  `json:"temp" influx:"evse_temp"`
+		Temp      int  `json:"temp" chargeflux:"evse_temp"`
 		TempMax   int  `json:"temp_max"`
 		Connected bool `json:"connected"`
 		Access    bool `json:"access"`
 		// Mode is ignored, it's in SmartEVSESettings
 		LBMode         LBMode `json:"loadbl"`
-		PWM            uint16 `json:"pwm" influx:"evse_pwm"`
+		PWM            uint16 `json:"pwm" chargeflux:"evse_pwm"`
 		SolarStopTimer uint16 `json:"solar_stop_timer"`
 		// JSON field "state" is ignored in favor of "state_id"
-		State StateId `json:"state_id" influx:"evse_state"`
+		State StateId `json:"state_id" chargeflux:"evse_state"`
 		// JSON field "error" is ignored in favor of "error_id"
-		Error ErrorId `json:"error_id" influx:"evse_error"`
+		Error ErrorId `json:"error_id" chargeflux:"evse_error"`
 	}
 
 	PhaseCurrents struct {
 		Total      int16 `json:"TOTAL"`
-		L1         int16 `json:"L1" influx:"phase_current_l1"`
-		L2         int16 `json:"L2" influx:"phase_current_l2"`
-		L3         int16 `json:"L3" influx:"phase_current_l3"`
-		ChargingL1 bool  `json:"charging_L1" influx:"phase_charging_l1"`
-		ChargingL2 bool  `json:"charging_L2" influx:"phase_charging_l2"`
-		ChargingL3 bool  `json:"charging_L3" influx:"phase_charging_l3"`
+		L1         int16 `json:"L1" chargeflux:"phase_current_l1"`
+		L2         int16 `json:"L2" chargeflux:"phase_current_l2"`
+		L3         int16 `json:"L3" chargeflux:"phase_current_l3"`
+		ChargingL1 bool  `json:"charging_L1" chargeflux:"phase_charging_l1"`
+		ChargingL2 bool  `json:"charging_L2" chargeflux:"phase_charging_l2"`
+		ChargingL3 bool  `json:"charging_L3" chargeflux:"phase_charging_l3"`
 	}
 
 	SmartEVSESettings struct {
 		Version string `json:"version"`
 		// JSON field "mode" is ignored in favor of "mode_id"
-		Mode          ChargeModeId  `json:"mode_id" influx:"charge_mode"`
-		CarConnected  bool          `json:"car_connected" influx:"car_connected"`
+		Mode          ChargeModeId  `json:"mode_id" chargeflux:"charge_mode"`
+		CarConnected  bool          `json:"car_connected" chargeflux:"car_connected"`
 		Wifi          Wifi          `json:"wifi"`
 		EVSE          EVSE          `json:"evse"`
 		PhaseCurrents PhaseCurrents `json:"phase_currents"`

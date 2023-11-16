@@ -8,15 +8,38 @@ import (
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api"
+	"github.com/influxdata/influxdb-client-go/v2/api/write"
 	"github.com/influxdata/influxdb-client-go/v2/domain"
 	"github.com/jonkerj/chargeflux/pkg/smartevse"
 )
 
-type Submitter struct {
-	context  context.Context
-	url      string
-	writeAPI api.WriteAPIBlocking
-	tags     map[string]string
+type (
+	Submitter struct {
+		context  context.Context
+		url      string
+		writeAPI api.WriteAPIBlocking
+		tags     map[string]string
+	}
+
+	cfPoint struct {
+		Point *write.Point
+	}
+)
+
+func NewCfPoint(name string, tags map[string]string) *cfPoint {
+	p := write.NewPointWithMeasurement(name)
+	for tag, value := range tags {
+		p.AddTag(tag, value)
+	}
+
+	return &cfPoint{
+		Point: p,
+	}
+}
+
+func (c *cfPoint) visit(field string, val int64) {
+	slog.Debug("adding field", "field", field, "value", val)
+	c.Point.AddField(field, val)
 }
 
 func NewSubmitter(smartEvseUrl string, influxdbUrl string, influxdbToken string, influxdbOrg string, influxdbBucket string, tags string) (*Submitter, error) {
@@ -53,14 +76,10 @@ func (s *Submitter) Work() error {
 		return fmt.Errorf("error fetching http: %v", err)
 	}
 
-	p := influxdb2.NewPointWithMeasurement("smartevse")
-	for tag, value := range s.tags {
-		p.AddTag(tag, value)
-	}
-	settings.AddFieldsToPoint(p)
-
+	p := NewCfPoint("smartevse", s.tags)
+	smartevse.VisitNumericFields(*settings, p.visit)
 	slog.Debug("submitting point", "point", p)
-	s.writeAPI.WritePoint(s.context, p)
+	s.writeAPI.WritePoint(s.context, p.Point)
 
 	return nil
 }

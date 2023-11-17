@@ -34,6 +34,10 @@ type (
 		Error ErrorId `json:"error_id" chargeflux:"evse_error"`
 	}
 
+	Settings struct {
+		ChargeCurrent int `json:"charge_current" chargflux:"charge_current"`
+	}
+
 	PhaseCurrents struct {
 		Total      int16 `json:"TOTAL"`
 		L1         int16 `json:"L1" chargeflux:"phase_current_l1"`

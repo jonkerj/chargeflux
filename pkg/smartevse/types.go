@@ -56,6 +56,7 @@ type (
 		Wifi          Wifi          `json:"wifi"`
 		EVSE          EVSE          `json:"evse"`
 		PhaseCurrents PhaseCurrents `json:"phase_currents"`
+		Settings      Settings      `json:"settings"`
 	}
 )
 

@@ -78,8 +78,7 @@ func (s *Submitter) Work() error {
 
 	p := NewCfPoint("smartevse", s.tags)
 	smartevse.VisitNumericFields(*settings, p.visit)
-	slog.Debug("submitting point", "point", p.Point)
-	s.writeAPI.WritePoint(s.context, p.Point)
 
-	return nil
+	slog.Debug("submitting point", "point", p.Point)
+	return s.writeAPI.WritePoint(s.context, p.Point)
 }

@@ -92,6 +92,8 @@ jobs:
         merge-multiple: true
     - name: Create checksums
       run: |
+        pwd
+        ls -R
         sha256sum chargeflux/chargeflux-* | tee chargeflux/chargeflux.sha256
     - name: Create release
       uses: softprops/action-gh-release@v2

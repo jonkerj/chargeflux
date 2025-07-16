@@ -40,12 +40,12 @@ jobs:
         go-version: '1.24'
     - name: Build
       run: |
-        GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -o chargeflux -v
+        GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -o chargeflux-${{matrix.goos}}-${{matrix.goarch}} -v
     - name: Save artifact
       uses: actions/upload-artifact@v4
       with:
         name: chargeflux-${{matrix.goos}}-${{matrix.goarch}}
-        path: chargeflux
+        path: chargeflux-${{matrix.goos}}-${{matrix.goarch}}
         retention-days: 1
 
   container:
@@ -90,12 +90,10 @@ jobs:
       with:
         pattern: chargeflux-*-*
         merge-multiple: true
+        path: release
     - name: Create checksums
       run: |
-        pwd
-        ls -R
-        file chargeflux
-        sha256sum chargeflux/chargeflux-* | tee chargeflux/chargeflux.sha256
+        sha256sum release/chargeflux-* | tee release/chargeflux.sha256
     - name: Create release
       uses: softprops/action-gh-release@v2
       with:
@@ -107,4 +105,4 @@ jobs:
           ${{ needs.tag.outputs.changelog }}
 
           Docker image: `ghcr.io/${{ github.repository }}:${{ needs.tag.outputs.tag }}`
-        files: chargeflux/*
+        files: release/*

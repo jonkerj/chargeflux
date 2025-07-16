@@ -23,7 +23,7 @@ type (
 		Temp      int  `json:"temp" chargeflux:"evse_temp"`
 		TempMax   int  `json:"temp_max"`
 		Connected bool `json:"connected"`
-		Access    bool `json:"access"`
+		Access    int  `json:"access"`
 		// Mode is ignored, it's in SmartEVSESettings
 		LBMode         LBMode `json:"loadbl"`
 		PWM            uint16 `json:"pwm" chargeflux:"evse_pwm"`

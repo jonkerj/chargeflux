@@ -87,6 +87,8 @@ jobs:
     steps:
     - name: Restore artifact
       uses: actions/download-artifact@v4
+      with:
+        pattern: chargeflux-*-*
     - name: Create checksums
       run: |
         sha256sum chargeflux-*-* | tee chargeflux.sha256

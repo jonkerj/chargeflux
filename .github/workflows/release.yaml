@@ -40,13 +40,12 @@ jobs:
         go-version: '1.24'
     - name: Build
       run: |
-        BINARY_NAME=chargeflux-${{matrix.goos}}-${{matrix.goarch}}
-        GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -o $BINARY_NAME -v
+        GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -o chargeflux -v
     - name: Save artifact
       uses: actions/upload-artifact@v4
       with:
-        name: chargeflux-artifact
-        path: chargeflux-*-*
+        name: chargeflux-${{matrix.goos}}-${{matrix.goarch}}
+        path: chargeflux
         retention-days: 1
 
   container:
@@ -88,8 +87,6 @@ jobs:
     steps:
     - name: Restore artifact
       uses: actions/download-artifact@v4
-      with:
-        name: chargeflux-artifact
     - name: Create checksums
       run: |
         sha256sum chargeflux-*-* | tee chargeflux.sha256

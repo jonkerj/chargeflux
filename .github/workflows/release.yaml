@@ -90,9 +90,10 @@ jobs:
       with:
         pattern: chargeflux-*-*
         merge-multiple: true
+        path: release
     - name: Create checksums
       run: |
-        sha256sum chargeflux-*-* | tee chargeflux.sha256
+        sha256sum release/chargeflux-* | tee release/chargeflux.sha256
     - name: Create release
       uses: softprops/action-gh-release@v2
       with:
@@ -104,4 +105,4 @@ jobs:
           ${{ needs.tag.outputs.changelog }}
 
           Docker image: `ghcr.io/${{ github.repository }}:${{ needs.tag.outputs.tag }}`
-        files: chargeflux-*-*,chargeflux.sha256
+        files: release/*

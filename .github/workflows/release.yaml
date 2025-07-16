@@ -89,6 +89,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         pattern: chargeflux-*-*
+        merge-multiple: true
     - name: Create checksums
       run: |
         sha256sum chargeflux-*-* | tee chargeflux.sha256

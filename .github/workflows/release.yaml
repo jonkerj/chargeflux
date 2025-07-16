@@ -93,6 +93,8 @@ jobs:
         path: release
     - name: Create checksums
       run: |
+        pwd
+        ls -R
         sha256sum release/chargeflux-* | tee release/chargeflux.sha256
     - name: Create release
       uses: softprops/action-gh-release@v2

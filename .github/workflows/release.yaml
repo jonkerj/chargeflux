@@ -94,6 +94,7 @@ jobs:
       run: |
         pwd
         ls -R
+        file chargeflux
         sha256sum chargeflux/chargeflux-* | tee chargeflux/chargeflux.sha256
     - name: Create release
       uses: softprops/action-gh-release@v2

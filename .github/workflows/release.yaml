@@ -43,7 +43,7 @@ jobs:
         BINARY_NAME=chargeflux-${{matrix.goos}}-${{matrix.goarch}}
         GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -o $BINARY_NAME -v
     - name: Save artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: chargeflux-artifact
         path: chargeflux-*-*
